@@ -5,7 +5,18 @@ import java.util.Iterator;
 class Iterators {
 
     public static Iterator<Integer> intArrayTwoTimesIterator(int[] array){
-        throw new UnsupportedOperationException();
+        if (array==null) throw new UnsupportedOperationException();
+        return new Iterator<Integer>() {
+            @Override
+            public boolean hasNext() {
+                return false;
+            }
+
+            @Override
+            public Integer next() {
+                return null;
+            }
+        };
     }
 
     public static Iterator<Integer> intArrayThreeTimesIterator(int[] array) {
