@@ -21,7 +21,12 @@ public class MarvelPlotFactory implements PlotFactory{
 
     @Override
     public Plot plot() {
-        return new PlotImpl(epicCrisis.name() + marvelPlotData[0] + addHeroes(heroes) + marvelPlotData[1] + villain.name() + marvelPlotData[2]);
+        return new PlotImpl(epicCrisis.name()
+                        + marvelPlotData[0]
+                        + addHeroes(heroes)
+                        + marvelPlotData[1]
+                        + villain.name()
+                        + marvelPlotData[2]);
     }
 
     private String addHeroes(Character[] heroes){
