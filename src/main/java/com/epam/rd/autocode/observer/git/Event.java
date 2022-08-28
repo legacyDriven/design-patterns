@@ -5,8 +5,8 @@ import java.util.Objects;
 import java.util.StringJoiner;
 
 public class Event {
-    private Type type;
-    private String branch;
+    private final Type type;
+    private final String branch;
     private List<Commit> commits;
 
     public Event(final Type type, final String branch, final List<Commit> commits) {

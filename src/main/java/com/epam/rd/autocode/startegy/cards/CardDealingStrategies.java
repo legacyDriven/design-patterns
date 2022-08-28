@@ -1,7 +1,9 @@
 package com.epam.rd.autocode.startegy.cards;
 
 public class CardDealingStrategies {
+
     public static CardDealingStrategy texasHoldemCardDealingStrategy() {
+
         throw new UnsupportedOperationException();
     }
 
