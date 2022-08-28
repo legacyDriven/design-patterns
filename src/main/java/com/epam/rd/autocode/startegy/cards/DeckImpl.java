@@ -31,4 +31,11 @@ public class DeckImpl implements Deck {
     public int size() {
         return cards.size();
     }
+
+    @Override
+    public String toString() {
+        return "DeckImpl{" +
+                "cards=" + cards +
+                '}';
+    }
 }

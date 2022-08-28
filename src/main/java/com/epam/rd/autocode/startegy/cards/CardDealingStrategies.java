@@ -8,6 +8,7 @@ public class CardDealingStrategies {
     }
 
     public static CardDealingStrategy classicPokerCardDealingStrategy() {
+
         throw new UnsupportedOperationException();
     }
 
@@ -16,7 +17,8 @@ public class CardDealingStrategies {
     }
 
     public static CardDealingStrategy foolCardDealingStrategy(){
-        throw new UnsupportedOperationException();
+        //throw new UnsupportedOperationException();
+        return new foolCardDealingStrategyImpl();
     }
 
 }
