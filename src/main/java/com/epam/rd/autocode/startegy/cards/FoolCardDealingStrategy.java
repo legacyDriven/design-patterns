@@ -5,26 +5,20 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class foolCardDealingStrategyImpl implements CardDealingStrategy {
+public class FoolCardDealingStrategy implements CardDealingStrategy {
 
     @Override
     public Map<String, List<Card>> dealStacks(Deck deck, int players) {
-        if(deck.size()!= 52 || players<2) throw new IllegalArgumentException("Wrong parameters passed");
-        Map<String, List<Card>> result = foolCardDealingStrategyImpl.initiateDealtMap(players);
-        System.out.println(result);
+        if((deck.size()!= 52 || deck.size()!= 36) && players<2) throw new IllegalArgumentException("Wrong parameters passed");
+        Map<String, List<Card>> result = FoolCardDealingStrategy.initiateDealtMap(players);
         int pointer = 0;
         for (int i = 0; i<players*6; i++){
             result.get("Player " + (pointer+1)).add(deck.dealCard());
             if(pointer==players-1) {
                 pointer = 0;
-            } else pointer++;
-        }
-        System.out.println("zostalo" + deck.size());
-        result.put("Remaining", foolCardDealingStrategyImpl.getRemainingCards(deck));
-        System.out.println("zostalo" + deck.size());
-
+            } else pointer++;}
         result.put("Trump card", List.of(deck.dealCard()));
-
+        result.put("Remaining", FoolCardDealingStrategy.getRemainingCards(deck));
         return result;
     }
 
@@ -38,17 +32,17 @@ public class foolCardDealingStrategyImpl implements CardDealingStrategy {
 
     private static List<Card> getRemainingCards(Deck deck){
         List<Card> remaining = new ArrayList<>();
-        for(int i = 0; i < deck.size()-1; i++){
+        int counter = deck.size();
+        for(int i = 0; i < counter; i++){
             remaining.add(deck.dealCard());
         }
-        System.out.println(remaining.size());
         return remaining;
     }
 
     public static void main(String[] args) {
         Deck deck = new DeckImpl(52);
         System.out.println(deck);
-        foolCardDealingStrategyImpl foolCardDealingStrategy = new foolCardDealingStrategyImpl();
+        FoolCardDealingStrategy foolCardDealingStrategy = new FoolCardDealingStrategy();
         Map<String, List<Card>> durak = foolCardDealingStrategy.dealStacks(deck, 2);
         System.out.println(durak);
     }
