@@ -8,6 +8,12 @@ public class WebHookImpl implements WebHook {
     private Event.Type eventType;
     private final String branch;
     private final List<Event> caughtEvents;
+    /*
+    public class Event {
+    private final Type type;
+    private final String branch;
+    private List<Commit> commits;
+     */
 
     public WebHookImpl(String branch) {
         this.branch = branch;
