@@ -1,21 +1,36 @@
 package com.epam.rd.autocode.observer.git;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class WebHookImpl implements WebHook {
+
+    private Event.Type eventType;
+    private final String branch;
+    private final List<Event> caughtEvents;
+
+    public WebHookImpl(String branch) {
+        this.branch = branch;
+        this.caughtEvents = new ArrayList<>();
+    }
+
     @Override
     public String branch() {
-        return null;
+        return branch;
+    }
+
+    public void setEventType(Event.Type eventType) {
+        this.eventType = eventType;
     }
 
     @Override
     public Event.Type type() {
-        return null;
+        return eventType;
     }
 
     @Override
     public List<Event> caughtEvents() {
-        return null;
+        return caughtEvents;
     }
 
     @Override

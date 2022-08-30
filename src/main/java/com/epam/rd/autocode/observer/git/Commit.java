@@ -5,6 +5,7 @@ import java.util.Objects;
 import java.util.StringJoiner;
 
 public class Commit{
+
     private String author;
     private String[] changes;
 
