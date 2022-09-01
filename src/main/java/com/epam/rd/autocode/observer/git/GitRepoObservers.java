@@ -7,20 +7,16 @@ public class GitRepoObservers {
     }
 
     public static WebHook mergeToBranchWebHook(String branchName){
-        //throw new UnsupportedOperationException();
         WebHookImpl mergeHook = new WebHookImpl(branchName);
         mergeHook.setEventType(Event.Type.MERGE);
         return mergeHook;
     }
 
     public static WebHook commitToBranchWebHook(String branchName){
-        //throw new UnsupportedOperationException();
         WebHookImpl commitHook = new WebHookImpl(branchName);
         commitHook.setEventType(Event.Type.COMMIT);
         return commitHook;
     }
-
-
 }
 
 /*

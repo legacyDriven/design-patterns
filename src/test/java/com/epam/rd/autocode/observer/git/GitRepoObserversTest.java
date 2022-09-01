@@ -13,7 +13,7 @@ public class GitRepoObserversTest {
         final WebHook commitMasterWebHook = GitRepoObservers.commitToBranchWebHook("master");
         final WebHook commitReadmeWebHook = GitRepoObservers.commitToBranchWebHook("dev-readme");
         final WebHook mergeMasterBranch = GitRepoObservers.mergeToBranchWebHook("master");
-
+        System.out.println(repo.toString());
         repo.addWebHook(mergeMasterBranch);
         repo.addWebHook(commitMasterWebHook);
         repo.addWebHook(commitReadmeWebHook);
@@ -44,6 +44,10 @@ public class GitRepoObserversTest {
                 "[]",
                 commitMasterWebHook.caughtEvents().toString()
         );
+        System.out.println(commitReadmeWebHook);
+        System.out.println(commitReadmeWebHook.caughtEvents().size());
+        System.out.println(commitReadmeWebHook.caughtEvents().get(0));
+        System.out.println(mergeMasterBranch);
         assertEquals(
                 "[Event[COMMIT, dev-readme, [Commit[Johnny Mnemonic, [Added README.md, Added project description]]]]," +
                         " Event[COMMIT, dev-readme, [Commit[Johnny Mnemonic, [Added functional requirements]]]]," +

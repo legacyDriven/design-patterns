@@ -8,12 +8,6 @@ public class WebHookImpl implements WebHook {
     private Event.Type eventType;
     private final String branch;
     private final List<Event> caughtEvents;
-    /*
-    public class Event {
-    private final Type type;
-    private final String branch;
-    private List<Commit> commits;
-     */
 
     public WebHookImpl(String branch) {
         this.branch = branch;
@@ -41,6 +35,21 @@ public class WebHookImpl implements WebHook {
 
     @Override
     public void onEvent(Event event) {
+        if (eventType.equals(Event.Type.COMMIT)) caughtEvents.add(event);
+        else {
+            //caughtEvents().add(event);
+            for (Commit c : event.commits()) {
 
+                // caughtEvents.add(new Event(Event.Type.MERGE, event.branch(), event.commits()));
+            }
+        }
+    }
+    @Override
+    public String toString() {
+        return "WebHookImpl{" +
+                "eventType=" + eventType +
+                ", branch='" + branch + '\'' +
+                ", caughtEvents=" + caughtEvents +
+                '}';
     }
 }
