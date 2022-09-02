@@ -2,12 +2,13 @@ package com.epam.rd.autocode.observer.git;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class WebHookImpl implements WebHook {
 
     private Event.Type eventType;
     private final String branch;
-    private final List<Event> caughtEvents;
+    private List<Event> caughtEvents;
 
     public WebHookImpl(String branch) {
         this.branch = branch;
@@ -15,17 +16,15 @@ public class WebHookImpl implements WebHook {
     }
 
     @Override
-    public String branch() {
-        return branch;
-    }
-
-    public void setEventType(Event.Type eventType) {
-        this.eventType = eventType;
-    }
+    public String branch() { return branch; }
 
     @Override
     public Event.Type type() {
         return eventType;
+    }
+
+    public void setEventType(Event.Type eventType) {
+        this.eventType = eventType;
     }
 
     @Override
@@ -35,21 +34,9 @@ public class WebHookImpl implements WebHook {
 
     @Override
     public void onEvent(Event event) {
-        if (eventType.equals(Event.Type.COMMIT)) caughtEvents.add(event);
-        else {
-            //caughtEvents().add(event);
-            for (Commit c : event.commits()) {
-
-                // caughtEvents.add(new Event(Event.Type.MERGE, event.branch(), event.commits()));
-            }
+        caughtEvents.add(event);
+        if(this.eventType.equals(Event.Type.MERGE)){
+            caughtEvents = caughtEvents.stream().distinct().collect(Collectors.toList());
         }
-    }
-    @Override
-    public String toString() {
-        return "WebHookImpl{" +
-                "eventType=" + eventType +
-                ", branch='" + branch + '\'' +
-                ", caughtEvents=" + caughtEvents +
-                '}';
     }
 }

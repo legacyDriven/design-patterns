@@ -1,22 +1,14 @@
 package com.epam.rd.autocode.observer.git;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.function.Consumer;
+import java.util.*;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 public class RepositoryImpl implements Repository {
 
-    private final Map<String, List<Commit>> commits;
-
-    private Map<Event.Type, List<WebHook>> webhooks;
+    private final Map<Event.Type, List<WebHook>> webhooks;
 
     public RepositoryImpl() {
         this.webhooks = new HashMap<>();
-        this.commits = new HashMap<>();
     }
 
     @Override
@@ -33,41 +25,59 @@ public class RepositoryImpl implements Repository {
     @Override
     public Commit commit(String branch, String author, String[] changes) {
         Commit toCommit = new Commit(author, changes);
-        Event toPropagate = new Event(Event.Type.COMMIT, branch, Stream.of(toCommit).collect(Collectors.toCollection(ArrayList::new)));
-        notifyWebhooks(toPropagate);
-        //commits.get(branch).add(toCommit);
+        List<WebHook> toNotify = getWebhooksToNotify(branch);
+        if(!toNotify.isEmpty()){
+            for(WebHook hook : toNotify) hook.onEvent(new Event(Event.Type.COMMIT, branch, new ArrayList<>(List.of(toCommit))));
+        }
         return toCommit;
+    }
+
+    private List<WebHook> getWebhooksToNotify(String branch){
+        if(webhooks.containsKey(Event.Type.COMMIT)) {
+            return webhooks.get(Event.Type.COMMIT).stream()
+                    .filter(n -> n.branch().equals(branch))
+                    .collect(Collectors.toList());
+        } else return new ArrayList<>();
     }
 
     @Override
     public void merge(String sourceBranch, String targetBranch) {
-        List<Event> toMerge = extractEventsToMerge(sourceBranch);
-        for (Event e : toMerge){
-        notifyWebhooks(new Event(Event.Type.MERGE, targetBranch, e.commits()));
+        if(checkIfSourceBranchExists(sourceBranch) && checkIfMergeTargetExists(targetBranch)) {
+            List<Commit> toMerge = getCommitsToMerge(sourceBranch);
+            Optional<WebHook> toMergeTo = Optional.of(webhooks.get(Event.Type.MERGE).stream()
+                    .filter(n -> n.branch().equals(targetBranch))
+                    .findFirst()
+                    .get());
+            toMergeTo.ifPresent(webHook -> webHook.onEvent(new Event(Event.Type.MERGE, targetBranch, toMerge)));
         }
     }
 
-    private List<Event> extractEventsToMerge(String sourceBranch){
-        return webhooks.get(Event.Type.COMMIT).stream()
-                .filter(n-> n.branch().equals(sourceBranch))
+    private boolean checkIfSourceBranchExists(String sourceBranch){
+        List<WebHook> hooks = webhooks.get(Event.Type.COMMIT);
+        if(hooks!=null) {
+            List<WebHook> result = webhooks.get(Event.Type.COMMIT).stream()
+                    .filter(n -> n.branch().equals(sourceBranch))
+                    .collect(Collectors.toList());
+            return !result.isEmpty();
+        }
+        return false;
+    }
+
+    private boolean checkIfMergeTargetExists(String targetBranch){
+        WebHook hook = webhooks.get(Event.Type.MERGE).stream()
+                .filter(n->n.branch().equals(targetBranch))
+                .findFirst()
+                .orElse(null);
+        return hook!=null;
+    }
+
+    private List<Commit> getCommitsToMerge(String sourceBranch){
+        return webhooks.get(Event.Type.COMMIT)
+                .stream().filter(n -> n.branch().equals(sourceBranch))
                 .map(WebHook::caughtEvents)
-                .flatMap(List::stream)//.distinct() might be needed to add
+                .flatMap(List::stream)
+                .map(Event::commits)
+                .flatMap(List::stream)
                 .collect(Collectors.toList());
-    }
-
-    private void notifyWebhooks(Event event) {
-        Event.Type type = event.type();
-        //if (event.type().equals(Event.Type.COMMIT)) {
-            webhooks.get(type).stream()
-                    .filter(s -> s.branch().equals(event.branch()))
-                    .forEach(n -> n.onEvent(event));
-
-    }
-    @Override
-    public String toString() {
-        return "RepositoryImpl{" +
-                "commits=" + commits +
-                ", webhooks=" + webhooks +
-                '}';
     }
 }
