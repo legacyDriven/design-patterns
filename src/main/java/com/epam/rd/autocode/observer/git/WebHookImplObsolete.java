@@ -3,13 +3,13 @@ package com.epam.rd.autocode.observer.git;
 import java.util.ArrayList;
 import java.util.List;
 
-public class WebHookImplFucked implements WebHook {
+public class WebHookImplObsolete implements WebHook {
 
     private Event.Type eventType;
     private final String branch;
     private final List<Event> caughtEvents;
 
-    public WebHookImplFucked(String branch) {
+    public WebHookImplObsolete(String branch) {
         this.branch = branch;
         this.caughtEvents = new ArrayList<>();
     }

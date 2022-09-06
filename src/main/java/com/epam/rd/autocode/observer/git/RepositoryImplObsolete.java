@@ -7,13 +7,13 @@ import java.util.Map;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-public class RepositoryImplFucked implements Repository {
+public class RepositoryImplObsolete implements Repository {
 
     private final Map<String, List<Commit>> commits;
 
     private Map<Event.Type, List<WebHook>> webhooks;
 
-    public RepositoryImplFucked() {
+    public RepositoryImplObsolete() {
         this.webhooks = new HashMap<>();
         this.commits = new HashMap<>();
     }
